@@ -13,8 +13,9 @@
 
 #include <sys/xattr.h>
 
-static NSString * const kBaseUrl   = @"https://app.adjust.io";
+static NSString * const kBaseUrl   = @"https://addictive-inventory.herokuapp.com";
 static NSString * const kClientSdk = @"ios3.0.0";
+static NSString * const kBaseEndpoint = @"/tracking";
 
 
 #pragma mark -
@@ -24,33 +25,53 @@ static NSString * const kClientSdk = @"ios3.0.0";
     return kBaseUrl;
 }
 
++ (NSString *)baseEndpoint {
+    return kBaseEndpoint;
+}
+
 + (NSString *)clientSdk {
     return kClientSdk;
 }
 
 + (NSString *)userAgent {
+    NSDictionary *data = [self.class deviceData];
+
+    NSString *userAgent = [NSString stringWithFormat:@"%@ %@ %@ %@ %@ %@ %@ %@",
+                           [data objectForKey:@"bundle_identifier"],
+                           [data objectForKey:@"bundle_version"],
+                           [data objectForKey:@"device_type"],
+                           [data objectForKey:@"device_name"],
+                           [data objectForKey:@"os_name"],
+                           [data objectForKey:@"system_version"],
+                           [data objectForKey:@"language_code"],
+                           [data objectForKey:@"country_code"]];
+
+    return userAgent;
+}
+
++ (NSDictionary *)deviceData {
     UIDevice *device = UIDevice.currentDevice;
     NSLocale *locale = NSLocale.currentLocale;
     NSBundle *bundle = NSBundle.mainBundle;
     NSDictionary *infoDictionary = bundle.infoDictionary;
+    
+    NSString *bundleIdentifier = [infoDictionary objectForKey:(NSString *)kCFBundleIdentifierKey];
+    NSString *bundleVersion    = [infoDictionary objectForKey:(NSString *)kCFBundleVersionKey];
+    NSString *languageCode     = [locale objectForKey:NSLocaleLanguageCode];
+    NSString *countryCode      = [locale objectForKey:NSLocaleCountryCode];
+    NSString *osName           = @"ios";
 
-    NSString *bundeIdentifier = [infoDictionary objectForKey:(NSString *)kCFBundleIdentifierKey];
-    NSString *bundleVersion   = [infoDictionary objectForKey:(NSString *)kCFBundleVersionKey];
-    NSString *languageCode    = [locale objectForKey:NSLocaleLanguageCode];
-    NSString *countryCode     = [locale objectForKey:NSLocaleCountryCode];
-    NSString *osName          = @"ios";
-
-    NSString *userAgent = [NSString stringWithFormat:@"%@ %@ %@ %@ %@ %@ %@ %@",
-                           [self.class sanitizeU:bundeIdentifier],
-                           [self.class sanitizeU:bundleVersion],
-                           [self.class sanitizeU:device.aiDeviceType],
-                           [self.class sanitizeU:device.aiDeviceName],
-                           [self.class sanitizeU:osName],
-                           [self.class sanitizeU:device.systemVersion],
-                           [self.class sanitizeZ:languageCode],
-                           [self.class sanitizeZ:countryCode]];
-
-    return userAgent;
+    NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                          [self.class sanitizeU:bundleIdentifier],     @"bundle_identifier",
+                          [self.class sanitizeU:bundleVersion],        @"bundle_version",
+                          [self.class sanitizeU:device.aiDeviceType],  @"device_type",
+                          [self.class sanitizeU:device.aiDeviceName],  @"device_name",
+                          [self.class sanitizeU:osName],               @"os_name",
+                          [self.class sanitizeU:device.systemVersion], @"system_version",
+                          [self.class sanitizeZ:languageCode],         @"language_code",
+                          [self.class sanitizeZ:countryCode],          @"country_code",
+                          nil];
+    return data;
 }
 
 #pragma mark - sanitization

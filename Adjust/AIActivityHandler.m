@@ -422,7 +422,7 @@ static const double   kSubsessionInterval =  1;                // 1 second
 }
 
 - (BOOL)checkAppTokenLength:(NSString *)appToken {
-    if (appToken.length != 12) {
+    if (appToken.length < 12) {
         [self.logger error:@"Malformed App Token '%@'", appToken];
         return NO;
     }
@@ -441,10 +441,10 @@ static const double   kSubsessionInterval =  1;                // 1 second
     if (eventToken == nil) {
         return YES;
     }
-    if (eventToken.length != 6) {
-        [self.logger error:@"Malformed Event Token '%@'", eventToken];
-        return NO;
-    }
+//    if (eventToken.length != 6) {
+//        [AILogger error:@"Malformed Event Token '%@'", eventToken];
+//        return NO;
+//    }
     return YES;
 }
 

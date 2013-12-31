@@ -10,8 +10,10 @@
 @interface AIUtil : NSObject
 
 + (NSString *)baseUrl;
++ (NSString *)baseEndpoint;
 + (NSString *)clientSdk;
 + (NSString *)userAgent;
++ (NSDictionary *)deviceData;
 
 + (void)excludeFromBackup:(NSString *)filename;
 

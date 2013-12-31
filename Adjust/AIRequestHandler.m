@@ -26,7 +26,7 @@ static const double kRequestTimeout = 60; // 60 seconds
 @property (nonatomic, assign) id<AIPackageHandler> packageHandler;
 @property (nonatomic, assign) id<AILogger> logger;
 @property (nonatomic, retain) NSURL *baseUrl;
-
+@property (nonatomic, retain) NSString *baseEndpoint;
 @end
 
 
@@ -45,6 +45,7 @@ static const double kRequestTimeout = 60; // 60 seconds
     self.packageHandler = packageHandler;
     self.logger = AIAdjustFactory.logger;
     self.baseUrl = [NSURL URLWithString:AIUtil.baseUrl];
+    self.baseEndpoint = [AIUtil baseEndpoint];
 
     return self;
 }
@@ -98,7 +99,8 @@ static const double kRequestTimeout = 60; // 60 seconds
 
 #pragma mark - private
 - (NSMutableURLRequest *)requestForPackage:(AIActivityPackage *)package {
-    NSURL *url = [NSURL URLWithString:package.path relativeToURL:self.baseUrl];
+    NSString *endpoint = [NSString stringWithFormat:@"%@%@", self.baseEndpoint, package.path];
+    NSURL *url = [NSURL URLWithString:endpoint relativeToURL:self.baseUrl];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.timeoutInterval = kRequestTimeout;
     request.HTTPMethod = @"POST";
@@ -118,6 +120,19 @@ static const double kRequestTimeout = 60; // 60 seconds
         NSString *escapedValue = [value aiUrlEncode];
         NSString *pair = [NSString stringWithFormat:@"%@=%@", key, escapedValue];
         [pairs addObject:pair];
+    }
+    
+    NSDictionary *deviceData = [AIUtil deviceData];
+    NSError *error;
+    NSData *json = [NSJSONSerialization dataWithJSONObject:deviceData options:0 error:&error];
+    
+    if (error) {
+        [AILogger error:@"Failed to encode device data to JSON: %@", error];
+    } else {
+        NSString *jsonString = [[NSString alloc] initWithBytes:[json bytes] length:[json length] encoding:NSUTF8StringEncoding];
+        NSString *escapedJsonString = [jsonString aiUrlEncode];
+        NSString *pair = [NSString stringWithFormat:@"device_data=%@", escapedJsonString];
+        [pairs addObject:pair];        
     }
 
     NSString *bodyString = [pairs componentsJoinedByString:@"&"];
