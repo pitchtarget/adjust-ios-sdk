@@ -1,7 +1,9 @@
 ## Summary
 
-This is the iOS SDK of adjust.io™. You can read more about adjust.io™ at
-[adjust.io].
+This is the iOS SDK of Pitchtarget. This SDK is forked from adjust.io™ and it is
+designed as a drop-in replacement for such SDK.
+
+You can read more about adjust.io™ at [adjust.io].
 
 ## Basic Installation
 
@@ -13,13 +15,13 @@ If you're using [CocoaPods][cocoapods], you can add the following line to your
 `Podfile` and continue with [step 3](#step3):
 
 ```ruby
-pod 'Adjust', :git => 'git://github.com/adeven/adjust_ios_sdk.git', :tag => 'v3.0.0'
+pod 'Pitchtarget', :git => 'https://bitbucket.org/rocodromo/addictive-ios-sdk/adjust_ios_sdk.git', :tag => 'v2.1.1'
 ```
 
 ### 1. Get the SDK
 
-Download the latest version from our [releases page][releases]. Extract the
-archive in a folder of your choice.
+Clone this repository or generate a zipball. In the latter case, extract the
+archive to a folder.
 
 ### 2. Add it to your project
 
@@ -46,7 +48,7 @@ attribute `Required` to `Optional`.
 
 ![][framework]
 
-### 4. Integrate Adjust into your app
+### 4. Integrate Pitchtarget into your app
 
 In the Project Navigator open the source file your Application Delegate. Add
 the `import` statement at the top of the file. In the `didFinishLaunching` or
@@ -62,7 +64,7 @@ calls to `Adjust`:
 ```
 ![][delegate]
 
-Replace `{YourAppToken}` with your App Token. You can find in your [dashboard].
+Replace `{YourAppToken}` with your App Token that has been given to you.
 
 You can increase or decrease the amount of logs you see by calling
 `setLogLevel:` with one of the following parameters:
@@ -97,7 +99,7 @@ meaningful at all times! Especially if you are tracking revenue.
 ### 5. Build your app
 
 Build and run your app. If the build succeeds, you successfully integrated
-adjust into your app. After the app launched, you should see the debug log
+Pitchtarget into your app. After the app launched, you should see the debug log
 `Tracked session start`.
 
 ![][run]
@@ -117,29 +119,23 @@ adjust into your app. After the app launched, you should see the debug log
 
 ## Additional features
 
-Once you integrated the adjust SDK into your project, you can take advantage
-of the following features.
+Once you integrated the Pitchtarget SDK into your project, you can take
+advantage of the following features.
 
 ### 6. Add tracking of custom events.
 
-You can tell adjust about every event you want. Suppose you want to track
-every tap on a button. You would have to create a new Event Token in your
-[dashboard]. Let's say that Event Token is `abc123`. In your button's
+You can tell Pitchtarget about every event you want. Suppose you want to track
+every tap on a button. Just call you event `button_tap`. In your button's
 `buttonDown` method you could then add the following line to track the click:
 
 ```objc
-[Adjust trackEvent:@"abc123"];
+[Adjust trackEvent:@"button_tap"];
 ```
+You can also append and other custom paramters to any event you track. Just put
+some key-value pairs in a dictionary and pass them to the `trackEvent` method.
 
-You can also register a callback URL for that event in your [dashboard] and we
-will send a GET request to that URL whenever the event gets tracked. In that
-case you can also put some key-value-pairs in a dictionary and pass it to the
-`trackEvent` method. We will then append these named parameters to your
-callback URL.
-
-For example, suppose you have registered the URL
-`http://www.adeven.com/callback` for your event with Event Token `abc123` and
-execute the following lines:
+For example, if you want to send more data about your button tap event, add the
+following lines:
 
 ```objc
 NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
@@ -171,21 +167,20 @@ worth one cent, you could make the following call to track that revenue:
 
 The parameter is supposed to be in cents and will get rounded to one decimal
 point. If you want to differentiate between different kinds of revenue you can
-get different Event Tokens for each kind. Again, you need to create those Event
-Tokens in your [dashboard]. In that case you would make a call like this:
+simply use different event names for each kind. In that case you would make a
+call like this:
 
 ```objc
-[Adjust trackRevenue:1.0 forEvent:@"abc123"];
+[Adjust trackRevenue:1.0 forEvent:@"button_tap"];
 ```
 
-Again, you can register a callback and provide a dictionary of named
-parameters, just like it worked with normal events.
+Again, you can send custom parameters as you would do with normal events.
 
 ```objc
 NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
 [parameters setObject:@"value" forKey:@"key"];
 [parameters setObject:@"bar"   forKey:@"foo"];
-[Adjust trackRevenue:1.0 forEvent:@"abc123" withParameters:parameters];
+[Adjust trackRevenue:1.0 forEvent:@"button_tap" withParameters:parameters];
 ```
 
 If you want to track In-App Purchases, please make sure to call `trackRevenue`
@@ -285,8 +280,6 @@ in the `didFinishLaunching` method of your Application Delegate:
 
 [adjust.io]: http://adjust.io
 [cocoapods]: http://cocoapods.org
-[dashboard]: http://adjust.io
-[releases]: https://github.com/adeven/adjust_ios_sdk/releases
 [arc]: http://en.wikipedia.org/wiki/Automatic_Reference_Counting
 [transition]: http://developer.apple.com/library/mac/#releasenotes/ObjectiveC/RN-TransitioningToARC/Introduction/Introduction.html
 [drag]: https://raw.github.com/adeven/adjust_sdk/master/Resources/ios/drag3.png

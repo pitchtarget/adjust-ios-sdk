@@ -1,11 +1,11 @@
 Pod::Spec.new do |s|
-  s.name         = "Adjust"
+  s.name         = "Pitchtarget"
   s.version      = "3.0.0"
-  s.summary      = "This is the iOS SDK of Adjust. You can read more about it at http://adjust.io."
-  s.homepage     = "http://adjust.io"
+  s.summary      = "Pitchtarget Tracking SDK"
+  s.homepage     = "http://pitchtarget.com"
   s.license      = { :type => 'MIT', :file => 'MIT-LICENSE' }
-  s.author       = { "Christian Wellenbrock" => "welle@adeven.com" }
-  s.source       = { :git => "https://github.com/adeven/adjust_ios_sdk.git", :tag => "v3.0.0" }
+  s.author       = { "Pitchtarget" => "support@pitchtarget.com" }
+  s.source       = { :git => "https://bitbucket.org/rocodromo/addictive-ios-sdk/adjust_ios_sdk.git", :branch => "master" }
   s.platform     = :ios, '4.3'
   s.framework    = 'AdSupport', 'SystemConfiguration'
   s.source_files = 'Adjust/*.{h,m}', 'Adjust/AIAdditions/*.{h,m}'
