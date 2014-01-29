@@ -37,7 +37,7 @@ radio button to `Create groups for any added folders`.
 
 ![][add]
 
-### <a id="step3"></a>3. Add the AdSupport framework
+### 3. Add the AdSupport framework
 
 In the Project Navigator select your project. In the left hand side of the main
 view select your target. In the tab `Build Phases` expand the group `Link
