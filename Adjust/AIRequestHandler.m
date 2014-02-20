@@ -127,7 +127,7 @@ static const double kRequestTimeout = 60; // 60 seconds
     NSData *json = [NSJSONSerialization dataWithJSONObject:deviceData options:0 error:&error];
     
     if (error) {
-        [AILogger error:@"Failed to encode device data to JSON: %@", error];
+        [self.logger error:@"Failed to encode device data to JSON: %@", error];
     } else {
         NSString *jsonString = [[NSString alloc] initWithBytes:[json bytes] length:[json length] encoding:NSUTF8StringEncoding];
         NSString *escapedJsonString = [jsonString aiUrlEncode];
