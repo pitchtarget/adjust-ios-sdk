@@ -15,7 +15,7 @@ If you're using [CocoaPods][cocoapods], you can add the following line to your
 `Podfile` and continue with [step 3](#step3):
 
 ```ruby
-pod 'Pitchtarget', :git => 'https://bitbucket.org/rocodromo/addictive-ios-sdk/adjust_ios_sdk.git', :tag => 'v2.1.1'
+pod 'Pitchtarget', :git => 'https://github.com/pitchtarget/adjust-ios-sdk', :branch => 'master'
 ```
 
 ### 1. Get the SDK
